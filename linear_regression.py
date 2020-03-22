@@ -30,7 +30,7 @@ class Linear_model:
         return gradient_w, gradient_b
     
 
-    def train(self, inputs, outputs, lr, l2=0):
+    def train(self, inputs, outputs, lr=0.1, l2=0):
         gradient_w, gradient_b = self._mse_gradient(inputs,outputs)
         self.weights += lr * gradient_w
         self.bias += lr * gradient_b
@@ -45,6 +45,7 @@ class Linear_model:
         for i in self.weights:
             f.write(str(i)+",")
         f.write(str(self.bias[0]))
+        f.close()
 
     def load_model(self, path):
         f = open(path, 'r')
@@ -52,6 +53,7 @@ class Linear_model:
         weights = weights.split(',')
         self.weights = np.array(weights[:-1]).astype('float64')
         self.bias = np.array(weights[-1]).astype('float64')
+        f.close()
 
 if __name__ == "__main__":
     l = Linear_model(10)
@@ -59,8 +61,14 @@ if __name__ == "__main__":
     inputs = np.array([np.random.normal(0, 1, 10) for i in range(data_num)])
     outputs = np.zeros([data_num])
     for i in range(10):
-        l.train(inputs, outputs ,float(sys.argv[1]))
-    print(l._output(inputs)[0])
-    l.save_model('test')
-    l.load_model('test')
-    print(l._output(inputs)[0])
+        l.train(inputs, outputs)
+    test_output = l._output(inputs)[0]
+    f = open('test1', 'w')
+    f.write(str(test_output))
+    f.close()
+    l.save_model('test.model')
+    l.load_model('test.model')
+    test_output = l._output(inputs)[0]
+    f = open('test2', 'w')
+    f.write(str(test_output))
+    f.close()

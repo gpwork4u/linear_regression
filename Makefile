@@ -6,4 +6,5 @@ all:
 check: all
 	@diff -u test1 test2 && echo "OK" 
 	@rm test*
-
+clean:
+	rm test*

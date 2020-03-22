@@ -5,6 +5,7 @@ class Linear_model:
     def __init__(self, num):
         self.weights = np.random.normal(0, 1, num)
         self.bias = np.random.normal(0, 1, 1) 
+
     def _output(self, inputs):
         out = np.matmul(self.weights, inputs.transpose()) 
         out += self.bias
@@ -38,12 +39,28 @@ class Linear_model:
             l2_gradient_w,  l2_gradient_b = self.l2_gradient()
             self.weights += lr * l2 * l2_gradient_w
             self.bias += lr * l2 * l2_gradient_b
-        
+
+    def save_model(self, path):
+        f = open(path, 'w')
+        for i in self.weights:
+            f.write(str(i)+",")
+        f.write(str(self.bias[0]))
+
+    def load_model(self, path):
+        f = open(path, 'r')
+        weights = f.readline()
+        weights = weights.split(',')
+        self.weights = np.array(weights[:-1]).astype('float64')
+        self.bias = np.array(weights[-1]).astype('float64')
+
 if __name__ == "__main__":
     l = Linear_model(10)
     data_num = 100
     inputs = np.array([np.random.normal(0, 1, 10) for i in range(data_num)])
     outputs = np.zeros([data_num])
-    for i in range(10000):
+    for i in range(10):
         l.train(inputs, outputs ,float(sys.argv[1]))
+    print(l._output(inputs)[0])
+    l.save_model('test')
+    l.load_model('test')
     print(l._output(inputs)[0])

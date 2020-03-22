@@ -30,8 +30,7 @@ class Linear_model:
         return gradient_w, gradient_b
     
 
-    def train(self,inputs,outputs, lr, l2=0):
-        print("loss:%4f output:%4f"%(self._mse_loss(inputs,outputs), self._output(inputs)[0]))
+    def train(self, inputs, outputs, lr, l2=0):
         gradient_w, gradient_b = self._mse_gradient(inputs,outputs)
         self.weights += lr * gradient_w
         self.bias += lr * gradient_b
@@ -39,6 +38,7 @@ class Linear_model:
             l2_gradient_w,  l2_gradient_b = self.l2_gradient()
             self.weights += lr * l2 * l2_gradient_w
             self.bias += lr * l2 * l2_gradient_b
+        return self._mse_loss(inputs, outputs)
 
     def save_model(self, path):
         f = open(path, 'w')
